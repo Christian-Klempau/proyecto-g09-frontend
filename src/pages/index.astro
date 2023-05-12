@@ -1,39 +1,66 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
----
 
-<Layout title="Welcome to Astro.">
-	<main>
-		<h1>Welcome to <span class="text-gradient">Astro</span></h1>
-		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
-		</p>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
-		</ul>
-	</main>
+type Warehouse = {
+	warehouseName: string;
+	warehouseId: string;
+	usedSpace: number;
+  	totalSpace: number;
+	inventory: {
+		sku: string;
+		quantity: number;
+	}[];
+};
+
+
+// then() response.json() catch() catch errors
+var data: Warehouse[] = [];
+
+try {
+	const response = await fetch('http://localhost:3000/stocks-by-warehouse/');
+	data = await response.json();
+} catch (error) {
+	console.log(error);
+}
+
+---
+<Layout title="Warehouse stock">
+	<div class="container mt-5">
+		{data.length === 0 && <h1 class="text-center">Error fetching data</h1>}
+		
+		{data.length > 0 && 
+		<h1 class="text-center">Warehouse stock g9</h1>
+		<div class="row mt-5">
+			{data.map((warehouse) => 
+			<div class="col">
+				<h3 class="text-center">{warehouse.warehouseName}</h3>
+				<p class="text-center">capacity: {warehouse.usedSpace} / {warehouse.totalSpace}</p>
+				<table class="table">
+					<thead>
+					  <tr>
+						  <th scope="col">SKU</th>
+						  <th scope="col">Quantity</th>
+					  </tr>
+					</thead>
+					<tbody>
+						{warehouse.inventory.map((item) =>
+							<tr>
+								<td>{item.sku}</td>
+								<td>{item.quantity}</td>
+							</tr>
+						)
+						}
+					</tbody>
+				  </table>
+			</div>
+			)}
+		</div>
+	}
+		
+	</div>
+
 </Layout>
+
 
 <style>
 	main {
