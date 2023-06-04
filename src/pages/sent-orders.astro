@@ -1,0 +1,121 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+
+
+type SentOrder = {
+	id: number,
+	order_id: string,
+	cliente: number,
+	proveedor: number,
+	sku: string,
+	cantidad: number,
+	status: string,
+	creation: Date
+}
+
+
+
+// then() response.json() catch() catch errors
+var sentOrders : SentOrder[] = [];
+var errorHappened = false;
+
+//const baseUrl = "http://localhost:3000";
+const baseUrl = "http://lagarto9.ing.puc.cl";
+
+try {
+	const response = await fetch(`${baseUrl}/ordenes-compra/sent-orders`);
+	const data = await response.json();
+	sentOrders = data;
+} catch (error) {
+	errorHappened = true;
+	console.log(error);
+}
+
+---
+<Layout title="Warehouse stock">
+	<div class="container mt-2">
+		{errorHappened && <h1 class="text-center">Error fetching data</h1>}
+		
+		{!errorHappened &&
+
+			<h1 class="text-center">OC recibidas</h1>
+			<table class="table">
+				<thead>
+				  <tr>
+						<th scope="col">order_id</th>
+						<th scope="col">cliente</th>
+						<th scope="col">proveedor</th>
+						<th scope="col">sku</th>
+						<th scope="col">cantidad</th>
+						<th scope="col">status</th>
+						<th scope="col">creación</th>
+				  </tr>
+				</thead>
+				<tbody>
+				{sentOrders.map((order) => 
+					<tr>
+						<td>{order.order_id}</td>
+						<td>{order.cliente}</td>
+						<td>{order.proveedor}</td>
+						<td>{order.sku}</td>
+						<td>{order.cantidad}</td>
+						<td>{order.status}</td>
+						<td>{order.creation}</td>
+					</tr>
+				)}
+				</tbody>
+			</table	>
+		</div>
+		</div>
+	}
+		
+	</div>
+
+</Layout>
+
+
+<style>
+	main {
+		margin: auto;
+		padding: 1.5rem;
+		max-width: 60ch;
+	}
+	h1 {
+		font-size: 3rem;
+		font-weight: 800;
+		margin: 0;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+	.instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		border: 1px solid rgba(var(--accent), 25%);
+		background-color: white;
+		padding: 1rem;
+		border-radius: 0.4rem;
+	}
+	.instructions code {
+		font-size: 0.875em;
+		font-weight: bold;
+		background: rgba(var(--accent), 12%);
+		color: rgb(var(--accent));
+		border-radius: 4px;
+		padding: 0.3em 0.45em;
+	}
+	.instructions strong {
+		color: rgb(var(--accent));
+	}
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
+</style>
