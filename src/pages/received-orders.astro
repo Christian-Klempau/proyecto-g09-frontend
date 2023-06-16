@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { baseUrl } from '../globals';
 
 type RecievedOrder = {
 	id: number,
@@ -21,12 +22,9 @@ type RecievedOrder = {
 var receivedOrders: RecievedOrder[] = [];
 var errorHappened = false;
 
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "http://lagarto9.ing.puc.cl";
 
 try {
 	const response = await fetch(`${baseUrl}/ordenes-compra/received-orders`);
-	console.log("ACA")
 	const data = await response.json();
 	receivedOrders = data;
 } catch (error) {

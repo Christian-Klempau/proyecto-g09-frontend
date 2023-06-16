@@ -1,0 +1,65 @@
+---
+import { baseUrl } from "../globals";
+import Layout from "../layouts/Layout.astro";
+
+type Log = {
+id: number
+  message: string
+  status_code: number
+  context: string
+  data: {message: string, traceback?: string}
+  creation: string
+}
+
+var logs: Log[] = [];
+var errorHappened = false;
+try {
+	const response = await fetch(`${baseUrl}/logs`);
+	const data = await response.json();
+	logs = data;
+} catch (error) {
+	errorHappened = true;
+	console.log(error);
+}
+
+function replaceLineBreaks(str: string | undefined) {
+  if (typeof str === 'undefined') return "";
+  return str.replace("\\n", '\n');
+}
+---
+
+<Layout title="Warehouse stock">
+	<div class="container mt-2">
+		{errorHappened && <h1 class="text-center">Error fetching data</h1>}
+		
+		{!errorHappened &&
+			<h1 class="text-center">Logs</h1>
+			<table class="table">
+				<thead>
+				  <tr>
+						<th scope="col">message</th>
+						<th scope="col">status_code</th>
+						<th scope="col">context</th>
+						<th scope="col">data</th>
+						<th scope="col">creation</th>
+				  </tr>
+				</thead>
+				<tbody>
+				{logs.map((log) => 
+					<tr>
+						<td>{log.message}</td>
+            <td>{log.status_code}</td>
+            <td>{log.context}</td>
+            <td>{replaceLineBreaks(log.data.traceback)}</td>
+            <td>{new Date(log.creation).toLocaleString()}</td>
+					</tr>
+				)}
+				</tbody>
+			</table	>
+		</div>
+		</div>
+	}
+		
+	</div>
+
+</Layout>

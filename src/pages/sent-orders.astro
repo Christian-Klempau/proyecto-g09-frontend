@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import {baseUrl} from '../globals'
 
 
 
@@ -14,14 +15,16 @@ type SentOrder = {
 	creation: Date
 }
 
-
+console.log(baseUrl);
 
 // then() response.json() catch() catch errors
 var sentOrders : SentOrder[] = [];
 var errorHappened = false;
 
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "http://lagarto9.ing.puc.cl";
+
+// let baseUrl;
+// baseUrl = "http://lagarto9.ing.puc.cl";
+// baseUrl = "http://localhost:3000";
 
 try {
 	const response = await fetch(`${baseUrl}/ordenes-compra/sent-orders`);

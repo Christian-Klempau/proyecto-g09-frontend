@@ -1,4 +1,5 @@
 ---
+import { baseUrl } from '../globals';
 import Layout from '../layouts/Layout.astro';
 
 type Warehouse = {
@@ -16,9 +17,6 @@ type Warehouse = {
 // then() response.json() catch() catch errors
 var data: Warehouse[] = [];
 
-
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "http://lagarto9.ing.puc.cl";
 
 try {
 	const response = await fetch(`${baseUrl}/stocks-by-warehouse/`);
