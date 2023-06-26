@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import {baseUrl} from '../globals'
+import {baseUrl, strToLocale} from '../globals'
 
 
 
@@ -42,7 +42,7 @@ try {
 		
 		{!errorHappened &&
 
-			<h1 class="text-center">OC recibidas</h1>
+			<h1 class="text-center">OC enviadas</h1>
 			<table class="table">
 				<thead>
 				  <tr>
@@ -64,7 +64,7 @@ try {
 						<td>{order.sku}</td>
 						<td>{order.cantidad}</td>
 						<td>{order.status}</td>
-						<td>{order.creation}</td>
+						<td>{strToLocale(order.creation.toString())}</td>
 					</tr>
 				)}
 				</tbody>

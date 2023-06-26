@@ -1,0 +1,150 @@
+---
+import Layout from '../layouts/Layout.astro';
+import {baseUrl, strToLocale} from '../globals'
+
+
+
+type Invoice = {
+	id: string,
+	client: string,
+	supplier: string,
+	channel: string,
+	status: string,
+	createdAt: string,
+	updatedAt: string,
+	interest: number,
+	totalPrice: number,
+	price: number,
+}
+
+console.log(baseUrl);
+
+
+var bankStatement = {
+	BankStatement: {
+		group: 0,
+	balance: 0,
+	}
+};
+
+var invoices: Invoice[] = [];
+
+var errorHappened = false;
+
+let data;
+let response;
+
+
+try {
+	response = await fetch(`${baseUrl}/soap/bank-statement`);
+	data = await response.json();
+	bankStatement = data;
+
+	response = await fetch(`${baseUrl}/soap/get-prisma-invoices`);
+	data = await response.json();
+	if ("statusCode" in data) invoices = [];
+	else {
+
+		invoices = data;
+	}
+} catch (error) {
+	errorHappened = true;
+	console.log(error);
+}
+console.log(invoices)
+console.log(bankStatement)
+---
+<Layout title="Warehouse stock">
+	<div class="container mt-2">
+		{errorHappened && <h1 class="text-center">Error fetching data</h1>}
+		
+
+			<h1 class="text-center">Banco</h1>
+			<h3 class="text-center">Grupo: {bankStatement.BankStatement.group}</h3>
+			<h3 class="text-center">Balance: {bankStatement.BankStatement.balance.toFixed(3)}</h3>
+			<table class="table">
+				<thead>
+				  <tr>
+						<th scope="col">id</th>
+						<th scope="col">cliente</th>
+						<th scope="col">proveedor</th>
+						<th scope="col">canal</th>
+						<th scope="col">estado</th>
+						<th scope="col">precio</th>
+						<th scope="col">interés</th>
+						<th scope="col">precio total</th>
+						<th scope="col">creado en</th>
+						<th scope="col">actualizado en</th>
+				  </tr>
+				</thead>
+				<tbody>
+				{invoices.map((invoice) => 
+					<tr>
+						<td>{invoice.id}</td>
+						<td>{invoice.client}</td>
+						<td>{invoice.supplier}</td>
+						<td>{invoice.channel}</td>
+						<td>{invoice.status}</td>
+						<td>{invoice.price}</td>
+						<td>{invoice.interest}</td>
+						<td>{invoice.totalPrice}</td>
+						<td>{strToLocale(invoice.createdAt)}</td>
+						<td>{strToLocale(invoice.updatedAt)}</td>
+					</tr>
+				)}
+				
+				
+				</tbody>
+			</table	>
+		</div>
+		</div>
+		
+	</div>
+
+</Layout>
+
+
+<style>
+	main {
+		margin: auto;
+		padding: 1.5rem;
+		max-width: 60ch;
+	}
+	h1 {
+		font-size: 3rem;
+		font-weight: 800;
+		margin: 0;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+	.instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		border: 1px solid rgba(var(--accent), 25%);
+		background-color: white;
+		padding: 1rem;
+		border-radius: 0.4rem;
+	}
+	.instructions code {
+		font-size: 0.875em;
+		font-weight: bold;
+		background: rgba(var(--accent), 12%);
+		color: rgb(var(--accent));
+		border-radius: 4px;
+		padding: 0.3em 0.45em;
+	}
+	.instructions strong {
+		color: rgb(var(--accent));
+	}
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
+</style>

@@ -3,10 +3,23 @@ import Layout from '../layouts/Layout.astro';
 
 ---
 <Layout title="Warehouse stock">
+
+	<div class="container">
+		<img src="/public/chefcito.jpg" alt="chefcito">
+	</div>
+	<!-- redirect to "/stock" -->
+	<!-- <script>
+		location.href = "/stock";
+	</script> -->
 </Layout>
 
 
 <style>
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	main {
 		margin: auto;
 		padding: 1.5rem;

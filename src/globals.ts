@@ -2,4 +2,8 @@ let baseUrl: string;
 baseUrl = "http://lagarto9.ing.puc.cl";
 baseUrl = "http://localhost:3000";
 
-export { baseUrl };
+function strToLocale(str: string) {
+  return new Date(str).toLocaleString();
+}
+
+export { baseUrl, strToLocale };

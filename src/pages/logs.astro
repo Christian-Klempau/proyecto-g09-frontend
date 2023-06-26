@@ -1,5 +1,5 @@
 ---
-import { baseUrl } from "../globals";
+import { baseUrl, strToLocale } from "../globals";
 import Layout from "../layouts/Layout.astro";
 
 type Log = {
@@ -51,7 +51,7 @@ function replaceLineBreaks(str: string | undefined) {
             <td>{log.status_code}</td>
             <td>{log.context}</td>
             <td>{replaceLineBreaks(log.data.traceback)}</td>
-            <td>{new Date(log.creation).toLocaleString()}</td>
+            <td>{strToLocale(log.creation)}</td>
 					</tr>
 				)}
 				</tbody>

@@ -1,32 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { baseUrl, strToLocale } from '../globals';
+import {baseUrl, strToLocale} from '../globals'
 
-type RecievedOrder = {
+
+
+type SentOrder = {
 	id: number,
 	order_id: string,
 	cliente: number,
 	proveedor: number,
 	sku: string,
 	cantidad: number,
-	despachado: number,
 	status: string,
-	vencimiento: Date
-};
+	creation: Date
+}
 
-
-
-
+console.log(baseUrl);
 
 // then() response.json() catch() catch errors
-var receivedOrders: RecievedOrder[] = [];
+var sentOrders : SentOrder[] = [];
 var errorHappened = false;
 
 
+// let baseUrl;
+// baseUrl = "http://lagarto9.ing.puc.cl";
+// baseUrl = "http://localhost:3000";
+
 try {
-	const response = await fetch(`${baseUrl}/ordenes-compra/received-orders`);
+	const response = await fetch(`${baseUrl}/ordenes-compra/pending-orders`);
 	const data = await response.json();
-	receivedOrders = data;
+	sentOrders = data;
 } catch (error) {
 	errorHappened = true;
 	console.log(error);
@@ -39,7 +42,7 @@ try {
 		
 		{!errorHappened &&
 
-			<h1 class="text-center">OC recibidas</h1>
+			<h1 class="text-center">OC pendientes</h1>
 			<table class="table">
 				<thead>
 				  <tr>
@@ -48,22 +51,20 @@ try {
 						<th scope="col">proveedor</th>
 						<th scope="col">sku</th>
 						<th scope="col">cantidad</th>
-						<th scope="col">despachado</th>
 						<th scope="col">status</th>
-						<th scope="col">vencimiento</th>
+						<th scope="col">creación</th>
 				  </tr>
 				</thead>
 				<tbody>
-				{receivedOrders.map((order) => 
+				{sentOrders.map((order) => 
 					<tr>
 						<td>{order.order_id}</td>
 						<td>{order.cliente}</td>
 						<td>{order.proveedor}</td>
 						<td>{order.sku}</td>
 						<td>{order.cantidad}</td>
-						<td>{order.despachado}</td>
 						<td>{order.status}</td>
-						<td>{strToLocale(order.vencimiento.toString())}</td>
+						<td>{strToLocale(order.creation.toString())}</td>
 					</tr>
 				)}
 				</tbody>
